@@ -1,6 +1,6 @@
 {
   "name": "@jenvont/datavisualizer",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Module that creates canvas elements visualizing data.",
   "main": "src/dataVisualizer.js",
   "type": "module",
