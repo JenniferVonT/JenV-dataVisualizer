@@ -40,20 +40,20 @@ The code example creates:
 ## Installation
 ### npm
 ```
-npm install @jvt/datavisualizer
+npm install @jenvont/datavisualizer
 ```
 
 ### yarn
 ```
-yarn add @jvt/datavisualizer
+yarn add @jenvont/datavisualizer
 ```
 
 Once the package is installed you can import it using `import` (ES Modules) or `require` (CommonJS):
 
 ```
-import DataVisualizer from '@jvt/datavisualizer'
+import DataVisualizer from '@jenvont/datavisualizer'
 
-const DataVisualizer = require('@jvt/datavisualizer')
+const DataVisualizer = require('@jenvont/datavisualizer')
 ```
 
 ## Documentation
