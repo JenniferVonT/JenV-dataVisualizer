@@ -38,6 +38,23 @@ The code example creates:
 ![columnChartExample](./img/columnChartExample.png)
 
 ## Installation
+### npm
+```
+npm install @jvt/datavisualizer
+```
+
+### yarn
+```
+yarn add @jvt/datavisualizer
+```
+
+Once the package is installed you can import it using `import` (ES Modules) or `require` (CommonJS):
+
+```
+import DataVisualizer from '@jvt/datavisualizer'
+
+const DataVisualizer = require('@jvt/datavisualizer')
+```
 
 ## Documentation
 
@@ -174,7 +191,7 @@ Returns the HTMLCanvasElement from the chart object.
     document.querySelector('body').append(canvasElement)
 ```
 
-### - detDataPoints()
+### - getDataPoints()
 Returns all the data points currently in the chart object
 
 **Input**: -

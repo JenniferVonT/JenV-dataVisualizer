@@ -1,5 +1,5 @@
 {
-  "name": "data_visualizer",
+  "name": "@jvt/datavisualizer",
   "version": "1.0.0",
   "description": "Module that creates canvas elements visualizing data.",
   "main": "src/index.js",
