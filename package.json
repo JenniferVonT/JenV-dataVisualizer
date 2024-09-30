@@ -2,7 +2,7 @@
   "name": "@jenvont/datavisualizer",
   "version": "1.0.2",
   "description": "Module that creates canvas elements visualizing data.",
-  "main": "src/index.js",
+  "main": "src/dataVisualizer.js",
   "type": "module",
   "author": "Jennifer von Trotta-Treyden <jv222th@student.lnu.se>",
   "license": "MIT"
