@@ -49,12 +49,10 @@ npm install @jenvont/datavisualizer
 yarn add @jenvont/datavisualizer
 ```
 
-Once the package is installed you can import it using `import` (ES Modules) or `require` (CommonJS):
+Once the package is installed you can import it using `import` (ES Modules) statement:
 
 ```
 import DataVisualizer from '@jenvont/datavisualizer'
-
-const DataVisualizer = require('@jenvont/datavisualizer')
 ```
 
 ## Documentation
