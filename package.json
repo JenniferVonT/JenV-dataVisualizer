@@ -1,0 +1,9 @@
+{
+  "name": "data_visualizer",
+  "version": "1.0.0",
+  "description": "Module that creates canvas elements visualizing data.",
+  "main": "src/index.js",
+  "type": "module",
+  "author": "Jennifer von Trotta-Treyden <jv222th@student.lnu.se>",
+  "license": "MIT"
+}
