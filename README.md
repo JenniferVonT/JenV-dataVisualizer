@@ -34,7 +34,8 @@ This is a project specifically created for the course `1DV610 - Intro to softwar
     // ... and insert it into the DOM.
     document.querySelector('body').append(canvasElement)
 ```
-The code example creates:
+The code example creates this:
+
 ![columnChartExample](https://github.com/JenniferVonT/JenV-dataVisualizer/blob/main/img/columnChartExample.PNG)
 
 ## Installation
@@ -57,6 +58,11 @@ const DataVisualizer = require('@jenvont/datavisualizer')
 ```
 
 ## Documentation
+### Visual examples - colors
+Here are examples of all the color themes available at the moment for all three types of charts.
+![LineChartExamples](https://github.com/JenniferVonT/JenV-dataVisualizer/blob/main/img/colorThemeLineExamples.PNG)
+![ColumnChartExamples](https://github.com/JenniferVonT/JenV-dataVisualizer/blob/main/img/colorThemeColumnExamples.PNG)
+![PieChartExamples](https://github.com/JenniferVonT/JenV-dataVisualizer/blob/main/img/colorThemePieExample.PNG)
 
 ### - setGlobalOptions(obj)
 Sets the default options for all the canvas elements created, if nothing is set the default is "color: 'blue', width: '300', height: '200'".
