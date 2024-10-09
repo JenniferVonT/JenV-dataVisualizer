@@ -235,4 +235,6 @@ It needs to be testet, be it automated or manual so include a test report in you
 ### Structure
 Here is a class diagram of the module to easier understand how the different classes interact with eachother.
 
+![ClassDiagram](https://github.com/JenniferVonT/JenV-dataVisualizer/blob/main/img/1DV610_L2ClassDiagram.png)
+
 LICENSE: MIT
