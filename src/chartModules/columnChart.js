@@ -20,10 +20,10 @@ export class ColumnChart extends Chart {
       const chart = this._canvasElement.getContext('2d')
       const theme = this._getTheme()
 
-      chart.fillStyle = theme.background
+      chart.fillStyle = theme.getCurrentBackgroundColor()
       chart.fillRect(0, 0, this._canvasElement.width, this._canvasElement.height)
 
-      const amountOfColumns = Object.keys(this._dataPoints).length
+      const amountOfColumns = this._data.getAmountOfDataPoints()
       this._drawColumns(amountOfColumns)
     } catch (error) {
       this._errorHandler.consoleError(error)
@@ -38,17 +38,20 @@ export class ColumnChart extends Chart {
       const columnWidth = this._canvasElement.width / amountOfColumns
       const maxValue = this._getMaxDataValue() + 5
 
-      Object.entries(this._dataPoints).forEach(([ name, data ], index) => {
+      const dataPoints = this._data.getDataPoints()
+
+      Object.entries(dataPoints).forEach(([ name, data ], index) => {
         const columnHeight = (data / maxValue) * this._canvasElement.height
         const position = index * columnWidth
 
         // Cycle through all the data colors in the theme.
-        chart.fillStyle = theme.data[index % theme.data.length]
+        const dataColors = theme.getCurrentDataColors()
+        chart.fillStyle = dataColors[index % dataColors.length]
 
         // Draw the column.
         chart.fillRect(position, this._canvasElement.height - columnHeight, columnWidth - 1, columnHeight)
 
-        chart.fillStyle = theme.lines || 'black'
+        chart.fillStyle = theme.getCurrentLineColor() || 'black'
         chart.textAlign = 'center'
         chart.font = '"Roboto", sans-serif'
 

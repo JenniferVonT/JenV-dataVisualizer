@@ -22,7 +22,7 @@ This is a project specifically created for the course `1DV610 - Intro to softwar
 
     // The default options are "color: 'blue', width: '300', height: '200'"
     // This sets the default height and width of the canvas element to 450x450 pixels and the color theme to red.
-    dataVisualizer.setGlobalOptions({ color: 'red', width: 450 height: 450 })
+    dataVisualizer.setGlobalOptions({ color: 'red', width: 450, height: 450 })
 
     // Create a column chart, inserting data points at this stage is optional (can be inserted after aswell).
     const dataPoints = { one: 5, two: 10, three: 15, four: 20, five: 40, six: 22 }

@@ -7,14 +7,15 @@
  */
 
 import { ErrorHandler } from '../errorHandler.js'
+import { ColorTheme } from '../colorTheme.js'
+import { Data } from '../data.js'
 
 export class Chart {
   _errorHandler
-  _dataPoints
+  _data
   _globalOptions
   _canvasElement
-  #dataPointLimit
-  #colorThemes
+  #colorTheme
   #maxHeightAndWidth
   #minHeightAndWidth
 
@@ -25,18 +26,21 @@ export class Chart {
   constructor (globalOptions, dataPoints) {
 
     this._errorHandler = new ErrorHandler()
-    this._dataPoints = {}
+    this._data = new Data()
     this._globalOptions = { color: 'blue', width: '300', height: '200' }
     this._canvasElement = document.createElement('canvas')
 
-    this.#dataPointLimit = 15
-    this.#colorThemes = {}
+    this.#colorTheme = new ColorTheme()
+    this.#colorTheme.setColorTheme(this._globalOptions.color)
     this.#maxHeightAndWidth = 2000
     this.#minHeightAndWidth = 20
 
-    this.#createColorThemes()
-    this.#saveGlobalOptions(globalOptions)
-    this.#saveDataPoints(dataPoints)
+    if (globalOptions && Object.keys(globalOptions).length > 0) {
+      this.#saveGlobalOptions(globalOptions)
+    }
+    if (dataPoints) {
+      this.#saveDataPoints(dataPoints)
+    }
     this.#buildChart()
   }
 
@@ -45,7 +49,7 @@ export class Chart {
       this.#insertWidthAndHeight()
       this.#clearCanvasContext()
 
-      if (Object.keys(this._dataPoints).length !== 0) {
+      if (Object.keys(this._data.getDataPoints()).length !== 0) {
         this._drawChart()
       }
     } catch (error) {
@@ -55,73 +59,42 @@ export class Chart {
 
   #saveDataPoints (dataPoints) {
     try {
-      if (this.#isDataPointsValid(dataPoints)) {
-        this._dataPoints = dataPoints
+      this._data.setMultipleDataPoints(dataPoints)
+    } catch (error) {
+      this._errorHandler.consoleError(error)
+    }
+  }
+
+  #saveGlobalOptions (options) {
+    try {
+      if(this.#isOptionsValid(options))  {
+        if (this.#colorTheme.isColorValidType(options.color)) {
+          this._globalOptions.color = options.color
+          this.#colorTheme.setColorTheme(options.color)
+        }
+        if (this.#isHeightOrWidthValid(options.width)) {
+          this._globalOptions.width = options.width
+        }
+        if (this.#isHeightOrWidthValid(options.height)) {
+          this._globalOptions.height = options.height
+        }
       }
     } catch (error) {
       this._errorHandler.consoleError(error)
     }
   }
 
-  #isDataPointsValid (dataPoints) {
-    if (!dataPoints || typeof dataPoints !== 'object' || Object.keys(dataPoints).length === 0) {
-      return false
-    }
-
-    for (const [key, dataPoint] of Object.entries(dataPoints)) {
-      if (typeof dataPoint !== 'number') {
-        throw this._errorHandler.createErrorObject('#isDataPointsValid: One or more datapoint value(s) is not the correct type, it should be a number.', 400)
-      }
-    }
-
-    const currentDataPointAmount = Object.keys(this._dataPoints).length
-    const newDataPointAmount = Object.keys(dataPoints).length
-    if ((currentDataPointAmount + newDataPointAmount) > this.#dataPointLimit) {
-      return false
-    }
-
-    return true
-  }
-
-  #saveGlobalOptions (options) {
-    if(this.#isOptionsValid(options))  {
-      if (options.color) {
-        this._globalOptions.color = options.color
-      }
-      if (options.width) {
-        this._globalOptions.width = options.width
-      }
-      if (options.height) {
-        this._globalOptions.height = options.height
-      }
-    }
-  }
-
   #isOptionsValid (options) {
     const validOptions = ['color', 'width', 'height']
-    let validState = false
+    let validState = true
   
     if (typeof options !== 'object' || options === null) {
-      return validState
+      validState = false
     }
 
     for (const [option, value] of Object.entries(options)) {
       if (!validOptions.includes(option)) {
-        return validState
-      }
-
-      switch (option) {
-        case 'color':
-          if (this.#isColorValidType(value)) { validState = true }
-          break
-        case 'width':
-          if (this.#isHeightOrWidthValid(value)) { validState = true }
-          break
-        case 'height':
-          if (this.#isHeightOrWidthValid(value)) { validState = true }
-          break
-        default:
-          break
+        validState = false
       }
     }
 
@@ -133,21 +106,12 @@ export class Chart {
    */
   setColorTheme (color) {
     try {
-      if (this.#isColorValidType(color)) {
-        this._globalOptions.color = color
+      this.#colorTheme.setColorTheme(color)
+      this._globalOptions.color = color
 
-        this.#updateChart()
-      }
+      this.#updateChart()
     } catch (error) {
       this._errorHandler.consoleError(error)
-    }
-  }
-
-  #isColorValidType (color) {
-    if (typeof color === 'string' && /blue|green|red|yellow/.test(color)) {
-      return true
-    } else {
-      throw this._errorHandler.createErrorObject('#isColorValidType: That color theme does not exist, choose: blue, green, red or yellow', 400)
     }
   }
 
@@ -157,12 +121,8 @@ export class Chart {
    */
   insertDataPoint (key, value) {
     try {
-      if (!this.#isDataFull()) {
-        if (this.#isDataPointsValid({ [key]: value }))
-          this._dataPoints[key] = value
-
-          this.#updateChart()
-      }
+      this._data.setDataPoint(key, value)
+      this.#updateChart()
     } catch (error) {
       this._errorHandler.consoleError(error)
     }
@@ -175,34 +135,13 @@ export class Chart {
    */
   updateDataPoint (key, oldValue, newValue) {
     try {
-      if (this.#isDataPointsValid({ [key]: newValue })) {
-        if (this.#isDataPresent(key, oldValue)) {
-          this._dataPoints[key] = newValue
-
-          this.#updateChart()
-        }
-      }
+      this._data.updateDataPoint(key, oldValue, newValue)
+      this.#updateChart()
     } catch (error) {
       this._errorHandler.consoleError(error)
     }
   }
 
-  #isDataFull () {
-    if (Object.keys(this._dataPoints).length < this.#dataPointLimit) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  #isDataPresent (key, value) {
-    const dataPointKey = this._dataPoints[key]
-
-    if (dataPointKey && dataPointKey === value) {
-      return true
-    }
-    return false
-  }
 
   /**
    * @param {String} key
@@ -210,11 +149,8 @@ export class Chart {
    */
   deleteDataPoint (key, value) {
     try {
-      if (this.#isDataPresent(key, value)) {
-       delete this._dataPoints[key]
-
-       this.#updateChart()
-      }
+      this._data.deleteDataPoint(key, value)
+      this.#updateChart()
     } catch (error) {
       this._errorHandler.consoleError(error)
     }
@@ -252,7 +188,7 @@ export class Chart {
   }
 
   clearChart () {
-    this._dataPoints = {}
+    this._data.clearChart()
 
     this.#updateChart()
   }
@@ -268,7 +204,7 @@ export class Chart {
    * @returns {Object}
    */
   getDataPoints () {
-    return this._dataPoints
+    return this._data.getDataPoints()
   }
 
   #clearCanvasContext () {
@@ -300,37 +236,12 @@ export class Chart {
     }
   }
 
-  #createColorThemes() {
-    this.#colorThemes = { 
-      blue: {
-        background: '#cddaff',
-        lines: '#002184',
-        data: [ '#8ca8ff', '#4d79ff', '#3b6bff', '#3163ff', '#0f4aff', '#1c2fff' ]
-      },
-      green: {
-        background: '#ddffdb',
-        lines: '#033700',
-        data: [ '#078500', '#0ab400', '#0ef400', '#37ff2b', '#6cff64', '#9dff97' ]
-      },
-      red: {
-        background: '#ffeaed',
-        lines: '#56000c',
-        data: [ '#ad0019', '#e10020', '#ff0f31', '#ff4e68', '#ff7488', '#ffa5b2' ]
-     },
-      yellow: {
-        background: '#fffff4',
-        lines: '#464600',
-        data: [ '#969600', '#cece00', '#ffff05', '#ffff34', '#ffff6f', '#ffffa3' ]
-      }
-    }
-  }
-
   _getMaxDataValue () {
-    return Math.max(...Object.values(this._dataPoints))
+    return this._data.getMaxDataValue()
   }
 
   _getTheme () {
-    return this.#colorThemes[this._globalOptions.color]
+    return this.#colorTheme
   }
 
   _drawChart () { /* Overridden in sub classes (unique to each type of chart) */}

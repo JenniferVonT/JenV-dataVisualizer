@@ -17,7 +17,8 @@ export class LineChart extends Chart {
 
   _drawChart () {
     try {
-      this._drawLineGraph(Object.keys(this._dataPoints).length)
+      const dataPointsLength = this._data.getAmountOfDataPoints()
+      this._drawLineGraph(dataPointsLength)
     } catch (error) {
       this._errorHandler.consoleError(error)
     }
@@ -27,23 +28,27 @@ export class LineChart extends Chart {
     try {
       const chart = this._canvasElement.getContext('2d')
       const theme = this._getTheme()
+      const lineColor = theme.getCurrentLineColor()
 
       const pointSpacing = this._canvasElement.width / amountOfDataPoints
       const maxValue = this._getMaxDataValue() + 20
 
-      chart.strokeStyle = theme.lines || 'black'
+      chart.strokeStyle = lineColor || 'black'
       chart.lineWidth = 2
 
-      chart.fillStyle = theme.background
+      chart.fillStyle = theme.getCurrentBackgroundColor()
       chart.fillRect(0, 0, this._canvasElement.width, this._canvasElement.height)
 
       chart.beginPath()
 
-      Object.entries(this._dataPoints).forEach(([ name, data ], index) => {
+      const dataPoints = this._data.getDataPoints()
+      const dataPointLength = this._data.getAmountOfDataPoints()
+
+      Object.entries(dataPoints).forEach(([ name, data ], index) => {
         const dataPointYPosition = this._canvasElement.height - (data / maxValue) * this._canvasElement.height
         const dataPointXPosition = index * pointSpacing
 
-        chart.fillStyle = theme.lines || 'black'
+        chart.fillStyle = lineColor || 'black'
         chart.textAlign = 'center'
         chart.font = '0.6rem "Roboto", sans-serif'
 
@@ -57,7 +62,7 @@ export class LineChart extends Chart {
           chart.lineTo(dataPointXPosition, dataPointYPosition)
 
           chart.fillText(data, (dataPointXPosition + 5), dataTextY)
-        } else if (index === Object.keys(this._dataPoints).length - 1) {
+        } else if (index === dataPointLength - 1) {
 
           chart.lineTo(dataPointXPosition, dataPointYPosition)
           chart.lineTo(this._canvasElement.width, dataPointYPosition)

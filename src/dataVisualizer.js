@@ -42,15 +42,15 @@ export class DataVisualizer {
     const { color, width, height } = options
 
     if (!this.#isColorCorrectTypeAndValue(color)) {
-      throw this.#errorHandler.createErrorObject('#isOptionsCorrect: That color theme does not exist, choose: blue, green, red or yellow', 400)
+      throw this.#errorHandler.createErrorObject('That color theme does not exist, choose: blue, green, red or yellow', 400)
     }
 
     if (!this.#isWidthCorrectTypeAndValue(width)) {
-      throw this.#errorHandler.createErrorObject('#isOptionsCorrect: The width is not correctly formatted or missing, please provide a string with integers not starting with 0', 400)
+      throw this.#errorHandler.createErrorObject('The width is not correctly formatted or missing, please provide a string with integers not starting with 0', 400)
     }
 
     if (!this.#isHeigthCorrectTypeAndValue(height)) {
-      throw this.#errorHandler.createErrorObject('#isOptionsCorrect: The height is not correctly formatted or missing, please provide a string with integers not starting with 0', 400)
+      throw this.#errorHandler.createErrorObject('The height is not correctly formatted or missing, please provide a string with integers not starting with 0', 400)
     }
 
     return true
@@ -141,5 +141,5 @@ export class DataVisualizer {
   }
 }
 
-// Always keep this last outside of the class!
+// Keep this last outside of the class!
 export default DataVisualizer
